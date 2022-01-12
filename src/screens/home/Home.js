@@ -191,6 +191,115 @@ class Home extends Component {
         return (
             <div>
                 <Header baseUrl={this.props.baseUrl} />
+
+                <div className={classes.upcomingMoviesHeading}>
+                    <span>Upcoming Movies</span>
+                </div>
+
+                <GridList cols={5} className={classes.gridListUpcomingMovies} >
+                    {this.state.upcomingMovies.map(movie => (
+                        <GridListTile key={"upcoming" + movie.id}>
+                            <img src={movie.poster_url} className="movie-poster" alt={movie.title} />
+                            <GridListTileBar title={movie.title} />
+                        </GridListTile>
+                    ))}
+                </GridList>
+
+                <div className="flex-container">
+                    <div className="left">
+                        <GridList cellHeight={350} cols={4} className={classes.gridListMain}>
+                            {this.state.releasedMovies.map(movie => (
+                                <GridListTile onClick={() => this.movieClickHandler(movie.id)} className="released-movie-grid-item" key={"grid" + movie.id}>
+                                    <img src={movie.poster_url} className="movie-poster" alt={movie.title} />
+                                    <GridListTileBar
+                                        title={movie.title}
+                                        subtitle={<span>Release Date: {new Date(movie.release_date).toDateString()}</span>}
+                                    />
+                                </GridListTile>
+                            ))}
+                        </GridList>
+                    </div>
+                    <div className="right">
+                        <Card>
+                            <CardContent>
+                                <FormControl className={classes.formControl}>
+                                    <Typography className={classes.title} color="textSecondary">
+                                        FIND MOVIES BY:
+                                    </Typography>
+                                </FormControl>
+
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="movieName">Movie Name</InputLabel>
+                                    <Input id="movieName" onChange={this.movieNameChangeHandler} />
+                                </FormControl>
+
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="select-multiple-checkbox">Genres</InputLabel>
+                                    <Select
+                                        multiple
+                                        input={<Input id="select-multiple-checkbox-genre" />}
+                                        renderValue={selected => selected.join(',')}
+                                        value={this.state.genres}
+                                        onChange={this.genreSelectHandler}
+                                    >
+                                        {this.state.genresList.map(genre => (
+                                            <MenuItem key={genre.id} value={genre.genre}>
+                                                <Checkbox checked={this.state.genres.indexOf(genre.genre) > -1} />
+                                                <ListItemText primary={genre.genre} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="select-multiple-checkbox">Artists</InputLabel>
+                                    <Select
+                                        multiple
+                                        input={<Input id="select-multiple-checkbox" />}
+                                        renderValue={selected => selected.join(',')}
+                                        value={this.state.artists}
+                                        onChange={this.artistSelectHandler}
+                                    >
+                                        {this.state.artistsList.map(artist => (
+                                            <MenuItem key={artist.id} value={artist.first_name + " " + artist.last_name}>
+                                                <Checkbox checked={this.state.artists.indexOf(artist.first_name + " " + artist.last_name) > -1} />
+                                                <ListItemText primary={artist.first_name + " " + artist.last_name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl className={classes.formControl}>
+                                    <TextField
+                                        id="releaseDateStart"
+                                        label="Release Date Start"
+                                        type="date"
+                                        defaultValue=""
+                                        InputLabelProps={{ shrink: true }}
+                                        onChange={this.releaseDateStartHandler}
+                                    />
+                                </FormControl>
+
+                                <FormControl className={classes.formControl}>
+                                    <TextField
+                                        id="releaseDateEnd"
+                                        label="Release Date End"
+                                        type="date"
+                                        defaultValue=""
+                                        InputLabelProps={{ shrink: true }}
+                                        onChange={this.releaseDateEndHandler}
+                                    />
+                                </FormControl>
+                                <br /><br />
+                                <FormControl className={classes.formControl}>
+                                    <Button onClick={() => this.filterApplyHandler()} variant="contained" color="primary">
+                                        APPLY
+                                    </Button>
+                                </FormControl>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             </div >
         )
     }
